@@ -11,8 +11,8 @@ public class MapGenerator : MonoBehaviour
 {
     // Serialized Variables
     [Header("Map Dimensions")]
-    public int width;
-    public int height;
+    public int mapWidth;
+    public int mapHeight;
     public int mapBorderSize;
 
     [Header("CheckPoints")]
@@ -28,7 +28,7 @@ public class MapGenerator : MonoBehaviour
     public int randomFillPercent;
     public int numPatches;
     public int patchRadius;
-    public int smoothning;
+    public int smoothening;
 
     [Header("Pathing")]
     public float maxDeviation;
@@ -70,7 +70,7 @@ public class MapGenerator : MonoBehaviour
         isGenerating = true;
         Debug.Log("Generating Map: " + isGenerating);
 
-        map = new int[width, height];
+        map = new int[mapWidth, mapHeight];
 
         path.Clear();
         patchCenters.Clear();
@@ -84,7 +84,7 @@ public class MapGenerator : MonoBehaviour
         yield return StartCoroutine(PopulateMap());
 
         // Stage 2: apply cellular automata rules
-        for (int i = 0; i < smoothning; i++)
+        for (int i = 0; i < smoothening; i++)
         {
             yield return StartCoroutine(SmoothMap());
             GenerateMesh();
@@ -144,33 +144,33 @@ public class MapGenerator : MonoBehaviour
         switch (edge)
         {
             case 0: // Left edge
-                startPoint = new Vector2Int(startPointOffset, pseudoRandom.Next(startPointOffset, height - startPointOffset));
+                startPoint = new Vector2Int(startPointOffset, pseudoRandom.Next(startPointOffset, mapHeight - startPointOffset));
                 break;
             case 1: // Right edge
-                startPoint = new Vector2Int(width - 1 - startPointOffset, pseudoRandom.Next(startPointOffset, height - startPointOffset));
+                startPoint = new Vector2Int(mapWidth - 1 - startPointOffset, pseudoRandom.Next(startPointOffset, mapHeight - startPointOffset));
                 break;
             case 2: // Top edge
-                startPoint = new Vector2Int(pseudoRandom.Next(startPointOffset, width - startPointOffset), height - 1 - startPointOffset);
+                startPoint = new Vector2Int(pseudoRandom.Next(startPointOffset, mapWidth - startPointOffset), mapHeight - 1 - startPointOffset);
                 break;
             case 3: // Bottom edge
-                startPoint = new Vector2Int(pseudoRandom.Next(startPointOffset, width - startPointOffset), startPointOffset);
+                startPoint = new Vector2Int(pseudoRandom.Next(startPointOffset, mapWidth - startPointOffset), startPointOffset);
                 break;
         }
 
-        bool isLeft = startPoint.x < width / 2;
-        bool isBottom = startPoint.y < height / 2;
+        bool isLeft = startPoint.x < mapWidth / 2;
+        bool isBottom = startPoint.y < mapHeight / 2;
 
         if (isLeft && isBottom)
-            endPoint = new Vector2Int(pseudoRandom.Next(width / 2, width - 2), pseudoRandom.Next(height / 2, height - 2));
+            endPoint = new Vector2Int(pseudoRandom.Next(mapWidth / 2, mapWidth - 2), pseudoRandom.Next(mapHeight / 2, mapHeight - 2));
 
         else if (!isLeft && !isBottom)
-            endPoint = new Vector2Int(pseudoRandom.Next(2, width / 2), pseudoRandom.Next(2, height / 2));
+            endPoint = new Vector2Int(pseudoRandom.Next(2, mapWidth / 2), pseudoRandom.Next(2, mapHeight / 2));
 
         else if (isLeft && !isBottom)
-            endPoint = new Vector2Int(pseudoRandom.Next(width / 2, width - 2), pseudoRandom.Next(2, height / 2));
+            endPoint = new Vector2Int(pseudoRandom.Next(mapWidth / 2, mapWidth - 2), pseudoRandom.Next(2, mapHeight / 2));
 
         else if (!isLeft && isBottom)
-            endPoint = new Vector2Int(pseudoRandom.Next(2, width / 2), pseudoRandom.Next(height / 2, height - 2));
+            endPoint = new Vector2Int(pseudoRandom.Next(2, mapWidth / 2), pseudoRandom.Next(mapHeight / 2, mapHeight - 2));
 
         PlaceGameObject(pointPrefab, startPoint, Color.black);
         yield return new WaitForSeconds(stepDelay);
@@ -179,7 +179,7 @@ public class MapGenerator : MonoBehaviour
 
     void PlaceGameObject(GameObject prefab, Vector2Int point, Color color)
     {
-        Vector3 pos = new Vector3((point.x - width / 2), 0f, (point.y - height / 2));
+        Vector3 pos = new Vector3((point.x - mapWidth / 2), 0f, (point.y - mapHeight / 2));
 
         GameObject newObj = Instantiate(prefab, pos, Quaternion.Euler(90f, 0f, 0f));
         spawnedObjects.Add(newObj);
@@ -193,11 +193,11 @@ public class MapGenerator : MonoBehaviour
 
     IEnumerator ForestFill()
     {
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < mapWidth; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < mapHeight; y++)
             {
-                if (x == 0 || x == width - 1 || y == 0 || y == height - 1)
+                if (x == 0 || x == mapWidth - 1 || y == 0 || y == mapHeight - 1)
                 {
                     map[x, y] = 1;
                 }
@@ -214,8 +214,8 @@ public class MapGenerator : MonoBehaviour
     {
         for (int i = 0; i < numPatches; i++)
         {
-            int x = pseudoRandom.Next(2, width - 2);
-            int y = pseudoRandom.Next(2, height - 2);
+            int x = pseudoRandom.Next(2, mapWidth - 2);
+            int y = pseudoRandom.Next(2, mapHeight - 2);
 
             Vector2Int center = new Vector2Int(x, y);
             
@@ -272,11 +272,11 @@ public class MapGenerator : MonoBehaviour
 	 */
     IEnumerator SmoothMap()
     {
-        int[,] newMap = new int[width, height];
+        int[,] newMap = new int[mapWidth, mapHeight];
 
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < mapWidth; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < mapHeight; y++)
             {
                 int neighbourWallTiles = GetSurroundingWallCount(x, y);
 
@@ -320,7 +320,7 @@ public class MapGenerator : MonoBehaviour
 
     bool IsInMapRange(int x, int y)
     {
-        return (x >= 0 && x < width && y >= 0 && y < height);
+        return (x >= 0 && x < mapWidth && y >= 0 && y < mapHeight);
     }
 
 
@@ -422,8 +422,8 @@ public class MapGenerator : MonoBehaviour
         float deviation = (float)(pseudoRandom.NextDouble() * 2 - 1) * maxDeviation;
         midpoint += perpendicular * deviation;
 
-        midpoint.x = Mathf.Clamp(midpoint.x, 1, width - 2);
-        midpoint.y = Mathf.Clamp(midpoint.y, 1, height - 2);
+        midpoint.x = Mathf.Clamp(midpoint.x, 1, mapWidth - 2);
+        midpoint.y = Mathf.Clamp(midpoint.y, 1, mapHeight - 2);
 
         GenerateCurvedPath(from, midpoint, segments - 1, maxDeviation * 0.5f, pathPoints);
         GenerateCurvedPath(midpoint, to, segments - 1, maxDeviation * 0.5f, pathPoints);
@@ -431,13 +431,13 @@ public class MapGenerator : MonoBehaviour
 
     IEnumerator AddMapBorder()
     {
-        int[,] borderedMap = new int[width + mapBorderSize * 2, height + mapBorderSize * 2];
+        int[,] borderedMap = new int[mapWidth + mapBorderSize * 2, mapHeight + mapBorderSize * 2];
 
         for (int x = 0; x < borderedMap.GetLength(0); x++)
         {
             for (int y = 0; y < borderedMap.GetLength(1); y++)
             {
-                if (x >= mapBorderSize && x < width + mapBorderSize && y >= mapBorderSize && y < height + mapBorderSize)
+                if (x >= mapBorderSize && x < mapWidth + mapBorderSize && y >= mapBorderSize && y < mapHeight + mapBorderSize)
                 {
                     borderedMap[x, y] = map[x - mapBorderSize, y - mapBorderSize];
                 }
