@@ -13,6 +13,7 @@ public class MapGenerator : MonoBehaviour
     [Header("Map Dimensions")]
     public int width;
     public int height;
+    public int mapBorderSize;
 
     [Header("CheckPoints")]
     public GameObject pointPrefab;
@@ -172,7 +173,7 @@ public class MapGenerator : MonoBehaviour
             endPoint = new Vector2Int(pseudoRandom.Next(2, width / 2), pseudoRandom.Next(height / 2, height - 2));
 
         PlaceGameObject(pointPrefab, startPoint, Color.black);
-        yield return new WaitForSeconds(stepDelay / 2);
+        yield return new WaitForSeconds(stepDelay);
         PlaceGameObject(pointPrefab, endPoint, Color.red);
     }
 
@@ -229,7 +230,7 @@ public class MapGenerator : MonoBehaviour
             ClearForest(center, patchRadius);
 
             GenerateMesh();
-            yield return new WaitForSeconds(stepDelay / 2);
+            yield return new WaitForSeconds(stepDelay / 4);
         }
         path.AddRange(patchCenters);
     }
@@ -355,7 +356,7 @@ public class MapGenerator : MonoBehaviour
 
             yield return StartCoroutine(DrawPath(currentPoint, nearest));
             GenerateMesh();
-            yield return new WaitForSeconds(stepDelay);
+            yield return new WaitForSeconds(stepDelay / 2);
 
             currentPoint = nearest;
             visited.Add(currentPoint);
@@ -430,16 +431,15 @@ public class MapGenerator : MonoBehaviour
 
     IEnumerator AddMapBorder()
     {
-        int borderSize = 1;
-        int[,] borderedMap = new int[width + borderSize * 2, height + borderSize * 2];
+        int[,] borderedMap = new int[width + mapBorderSize * 2, height + mapBorderSize * 2];
 
         for (int x = 0; x < borderedMap.GetLength(0); x++)
         {
             for (int y = 0; y < borderedMap.GetLength(1); y++)
             {
-                if (x >= borderSize && x < width + borderSize && y >= borderSize && y < height + borderSize)
+                if (x >= mapBorderSize && x < width + mapBorderSize && y >= mapBorderSize && y < height + mapBorderSize)
                 {
-                    borderedMap[x, y] = map[x - borderSize, y - borderSize];
+                    borderedMap[x, y] = map[x - mapBorderSize, y - mapBorderSize];
                 }
                 else
                 {
