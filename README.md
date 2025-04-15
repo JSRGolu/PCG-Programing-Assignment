@@ -61,16 +61,16 @@ The following variable values in MapGenerator.cs are used for generating  best o
 
 | Parameter | Values |
 | - |:-:|
-| `mapWidth` | `126` |
-| `mapHeight` | `70` |
-| `mapBorderSize` |  `2` |
-| `checkPointOffset` | `3` |
-| `randomFillPercent` | `55` |
-| `numPatches` | `25` |
-| `patchRadius` | `4` |
-| `smoothening` | `2` |
-| `maxDeviation` | `10` |
-| `segments` | `4` |
+| mapWidth | 126 |
+| mapHeight | 70 |
+| mapBorderSize |  2 |
+| checkPointOffset | 3 |
+| randomFillPercent | 55 |
+| numPatches | 25 |
+| patchRadius | 4 |
+| smoothening | 2 |
+| maxDeviation | 10 |
+| segments | 4 |
 
 These settings are optional yet ideal to produce a dense forest with a clear path network and sufficient open areas for the adventurer’s journey to the temple.
 
