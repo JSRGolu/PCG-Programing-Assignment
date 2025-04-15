@@ -363,18 +363,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d6f7b38aa16e4773a41f5c829e8523b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapWidth: 128
-  mapHeight: 72
+  mapWidth: 126
+  mapHeight: 70
   mapBorderSize: 2
   pointPrefab: {fileID: 3687452656651891409, guid: 5d9d1d5041ee8dc459bbd9704bef14c9, type: 3}
-  startPointOffset: 3
-  seed: PCG
+  checkPointOffset: 3
+  seed: lokesh
   useRandomSeed: 1
   randomFillPercent: 55
   numPatches: 25
-  patchRadius: 5
-  smoothening: 0
-  maxDeviation: 8
+  patchRadius: 4
+  smoothening: 2
+  maxDeviation: 10
   segments: 4
   stepDelay: 0.25
 --- !u!4 &723202080
